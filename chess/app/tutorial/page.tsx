@@ -2,81 +2,75 @@
 
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Zap, Trophy, TrendingUp, Lock } from 'lucide-react';
+import { BookOpen, Zap, CheckCircle, Lock } from 'lucide-react';
 import { LESSON_MODULES, LESSONS } from '@/features/tutorial/lessons';
 import LessonCard from '@/components/tutorial/LessonCard';
 import ProgressBar from '@/components/ui/ProgressBar';
-import Badge from '@/components/ui/Badge';
 import { useTutorialStore } from '@/store/tutorialStore';
 import { useUserStore } from '@/store/userStore';
 import { cn } from '@/utils/cn';
 
 export default function TutorialPage() {
   const { progress, getLessonStatus } = useTutorialStore();
-  const { profile, initGuestProfile } = useUserStore();
+  const { initGuestProfile } = useUserStore();
 
-  useEffect(() => {
-    initGuestProfile();
-  }, [initGuestProfile]);
+  useEffect(() => { initGuestProfile(); }, [initGuestProfile]);
 
   const totalLessons = LESSONS.length;
   const completedCount = progress.completedLessons.length;
   const completionPct = Math.round((completedCount / totalLessons) * 100);
 
-  const categoryColors = {
-    beginner: 'border-green-500/30 from-green-900/20',
-    intermediate: 'border-blue-500/30 from-blue-900/20',
-    advanced: 'border-purple-500/30 from-purple-900/20',
-  };
-
-  const categoryBadgeVariants: Record<string, 'success' | 'info' | 'warning'> = {
-    beginner: 'success',
-    intermediate: 'info',
-    advanced: 'warning',
+  const moduleAccents = {
+    beginner:     { ring: 'ring-emerald-500/20', dot: 'bg-emerald-400', label: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', bar: 'green' as const },
+    intermediate: { ring: 'ring-blue-500/20',    dot: 'bg-blue-400',    label: 'bg-blue-500/10 text-blue-400 border-blue-500/20',         bar: 'blue' as const },
+    advanced:     { ring: 'ring-violet-500/20',  dot: 'bg-violet-400',  label: 'bg-violet-500/10 text-violet-400 border-violet-500/20',   bar: 'purple' as const },
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[#080b14]">
       {/* Header */}
-      <div className="bg-gradient-to-b from-gray-900 to-gray-950 border-b border-gray-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+      <div className="relative overflow-hidden border-b border-white/[0.04]">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/[0.04] to-transparent pointer-events-none" />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 relative z-10">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="flex items-center gap-2 mb-3">
-              <BookOpen size={20} className="text-primary-400" />
-              <span className="text-primary-400 font-medium text-sm">Chess Academy</span>
+            <div className="flex items-center gap-2 mb-2">
+              <BookOpen size={15} className="text-emerald-400" />
+              <span className="text-emerald-400 font-semibold text-xs uppercase tracking-widest">Chess Academy</span>
             </div>
-            <h1 className="text-4xl font-bold text-white mb-3">Interactive Lessons</h1>
-            <p className="text-gray-400 text-lg max-w-2xl">
-              Master chess from the basics to advanced strategy with guided, interactive lessons.
+            <h1 className="text-4xl font-black text-white mb-2">Interactive Lessons</h1>
+            <p className="text-gray-400 max-w-xl">
+              Master chess from basics to advanced strategy with guided, interactive lessons.
             </p>
           </motion.div>
 
-          {/* Progress overview */}
+          {/* Progress bar */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mt-8 bg-gray-800/40 border border-gray-700/50 rounded-2xl p-6"
+            transition={{ delay: 0.15 }}
+            className="mt-8 bg-[#0e1422] border border-white/[0.06] rounded-2xl p-5"
           >
             <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
               <div>
-                <p className="text-white font-bold text-xl">{completedCount} / {totalLessons} Lessons</p>
-                <p className="text-gray-400 text-sm">Keep going! You're making great progress.</p>
+                <p className="text-white font-bold text-lg">{completedCount} <span className="text-gray-500 font-normal text-base">/ {totalLessons} lessons</span></p>
+                <p className="text-gray-500 text-sm mt-0.5">
+                  {completedCount === 0 ? 'Start your first lesson below.' : `${completionPct}% complete — keep going!`}
+                </p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-5">
                 <div className="text-center">
-                  <div className="flex items-center gap-1 text-yellow-400 font-bold text-lg">
-                    <Zap size={18} />
+                  <div className="flex items-center gap-1 text-amber-400 font-black text-lg tabular-nums">
+                    <Zap size={16} />
                     {progress.totalXp}
                   </div>
-                  <p className="text-gray-500 text-xs">Total XP</p>
+                  <p className="text-gray-600 text-[11px]">Total XP</p>
                 </div>
                 <div className="text-center">
-                  <div className="flex items-center gap-1 text-primary-400 font-bold text-lg">
-                    <Trophy size={18} />
+                  <div className="flex items-center gap-1 text-emerald-400 font-black text-lg tabular-nums">
+                    <CheckCircle size={16} />
                     {completedCount}
                   </div>
-                  <p className="text-gray-500 text-xs">Completed</p>
+                  <p className="text-gray-600 text-[11px]">Completed</p>
                 </div>
               </div>
             </div>
@@ -85,78 +79,68 @@ export default function TutorialPage() {
         </div>
       </div>
 
-      {/* Lesson Modules */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-16">
-        {LESSON_MODULES.map((module, moduleIndex) => {
+      {/* Modules */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-14">
+        {LESSON_MODULES.map((module, mi) => {
+          const acc = moduleAccents[module.category];
           const moduleLessons = module.lessons;
-          const moduleCompleted = moduleLessons.filter((l) => progress.completedLessons.includes(l.id)).length;
-          const moduleTotal = moduleLessons.length;
-          const isModuleLocked = !module.isUnlocked &&
-            moduleIndex > 0 &&
-            LESSON_MODULES[moduleIndex - 1].lessons.some((l) => !progress.completedLessons.includes(l.id));
+          const moduleDone = moduleLessons.filter(l => progress.completedLessons.includes(l.id)).length;
+          const isLocked = !module.isUnlocked &&
+            mi > 0 &&
+            LESSON_MODULES[mi - 1].lessons.some(l => !progress.completedLessons.includes(l.id));
 
           return (
             <motion.section
               key={module.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: moduleIndex * 0.1 }}
+              transition={{ delay: mi * 0.08 }}
             >
-              {/* Module Header */}
-              <div className={cn(
-                'rounded-2xl border bg-gradient-to-r to-transparent p-6 mb-6',
-                categoryColors[module.category]
-              )}>
+              {/* Module header */}
+              <div className={cn('rounded-2xl p-5 mb-5 ring-1 bg-[#0e1422]', acc.ring)}>
                 <div className="flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="text-3xl">{module.icon}</span>
+                    <div className="relative">
+                      <span className="text-2xl">{module.icon}</span>
+                      {isLocked && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#0e1422] border border-white/10 flex items-center justify-center">
+                          <Lock size={9} className="text-gray-500" />
+                        </div>
+                      )}
+                    </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h2 className="text-xl font-bold text-white">{module.title}</h2>
-                        <Badge variant={categoryBadgeVariants[module.category]}>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-white font-bold text-base">{module.title}</h2>
+                        <span className={cn('text-[11px] font-semibold px-2 py-0.5 rounded-full border capitalize', acc.label)}>
                           {module.category}
-                        </Badge>
-                        {isModuleLocked && (
-                          <div className="flex items-center gap-1 text-gray-500 text-sm">
-                            <Lock size={14} />
-                            <span>Complete previous module to unlock</span>
-                          </div>
-                        )}
+                        </span>
                       </div>
-                      <p className="text-gray-400 text-sm">{module.description}</p>
+                      <p className="text-gray-500 text-xs mt-0.5">{module.description}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-white font-bold">{moduleCompleted}/{moduleTotal}</p>
-                    <p className="text-gray-500 text-xs">lessons done</p>
+                    <p className="text-white font-bold tabular-nums text-sm">{moduleDone}/{moduleLessons.length}</p>
+                    <p className="text-gray-600 text-[11px]">complete</p>
                   </div>
                 </div>
-                {moduleCompleted > 0 && (
-                  <div className="mt-4">
-                    <ProgressBar value={moduleCompleted} max={moduleTotal} color={
-                      module.category === 'beginner' ? 'green' :
-                        module.category === 'intermediate' ? 'blue' : 'purple'
-                    } size="sm" animated />
+                {moduleDone > 0 && (
+                  <div className="mt-3">
+                    <ProgressBar value={moduleDone} max={moduleLessons.length} color={acc.bar} size="sm" animated />
                   </div>
                 )}
               </div>
 
-              {/* Lessons Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {moduleLessons.map((lesson, lessonIndex) => {
-                  const status = isModuleLocked
-                    ? 'locked'
-                    : getLessonStatus(lesson.id, lesson.prerequisites);
-                  return (
-                    <LessonCard
-                      key={lesson.id}
-                      lesson={lesson}
-                      status={status}
-                      index={lessonIndex}
-                    />
-                  );
-                })}
+              {/* Lessons grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {moduleLessons.map((lesson, li) => (
+                  <LessonCard
+                    key={lesson.id}
+                    lesson={lesson}
+                    status={isLocked ? 'locked' : getLessonStatus(lesson.id, lesson.prerequisites)}
+                    index={li}
+                  />
+                ))}
               </div>
             </motion.section>
           );

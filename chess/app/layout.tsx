@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${inter.variable} min-h-screen bg-gray-950 text-white flex flex-col`}>
+      <body className={`${inter.variable} min-h-screen bg-[#080b14] text-white flex flex-col`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Navbar />
           <main className="flex-1 pt-16">
@@ -33,13 +33,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position="bottom-right"
             toastOptions={{
               style: {
-                background: '#1f2937',
-                color: '#f9fafb',
-                border: '1px solid #374151',
-                borderRadius: '12px',
+                background: '#0e1422',
+                color: '#f1f5f9',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '14px',
+                fontSize: '14px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
               },
-              success: { iconTheme: { primary: '#22c55e', secondary: '#1f2937' } },
-              error: { iconTheme: { primary: '#ef4444', secondary: '#1f2937' } },
+              success: { iconTheme: { primary: '#4ade80', secondary: '#0e1422' } },
+              error: { iconTheme: { primary: '#f87171', secondary: '#0e1422' } },
             }}
           />
         </ThemeProvider>
